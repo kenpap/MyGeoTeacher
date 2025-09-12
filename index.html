@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Geography Quiz — All of the United States</title>
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Geography Quiz — All of the United States</h1>
+        <div class="info">
+          Level: <strong>All of the United States</strong> — you have <strong>10 minutes</strong> to name all 50 states (in English).
+        </div>
+      </div>
+      <div class="controls">
+        <div class="card">
+          <div>Time left: <strong id="timer">600</strong>s</div>
+          <div>Found: <strong id="count">0</strong>/50</div>
+        </div>
+      </div>
+    </header>
+
+    <section id="game" class="card">
+      <div class="input-row">
+        <input id="state-input" type="text" placeholder="Type a US state (e.g. California)" autocomplete="off" autocapitalize="words">
+        <button id="start-btn">Start / Restart</button>
+        <button id="hint-btn" class="secondary">Reveal random</button>
+        <div style="margin-left:8px; color:#6b7280">(Type full state name in English)</div>
+      </div>
+
+      <div id="map-wrap">
+        <!-- SVG map -->
+        <object id="us-svg" data="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_US_Map_%28states_only%29.svg" type="image/svg+xml"></object>
+
+        <div id="found-list" aria-live="polite"></div>
+      </div>
+
+      <footer>
+        Tip: press Enter after typing a state. The map will color the found state in green. The page expects the official state names (e.g. "New York", "North Carolina").
+      </footer>
+    </section>
+  </div>
+
+  <!-- Link to external JS -->
+  <script src="script.js" defer></script>
+</body>
+</html>
