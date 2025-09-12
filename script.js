@@ -1,4 +1,4 @@
-// Mapping: full state name -> USPS 2-letter code
+// ====== Mapping: full state name -> USPS code ======
 const STATE_TO_ABBR = {
   "Alabama":"AL","Alaska":"AK","Arizona":"AZ","Arkansas":"AR","California":"CA","Colorado":"CO","Connecticut":"CT","Delaware":"DE","Florida":"FL","Georgia":"GA",
   "Hawaii":"HI","Idaho":"ID","Illinois":"IL","Indiana":"IN","Iowa":"IA","Kansas":"KS","Kentucky":"KY","Louisiana":"LA","Maine":"ME","Maryland":"MD",
@@ -13,24 +13,25 @@ let timeLeft = 600; // 10 minutes
 let timerId = null;
 let svgDoc = null;
 
+// ====== DOM Elements ======
 const input = document.getElementById('state-input');
 const startBtn = document.getElementById('start-btn');
+const restartBtn = document.getElementById('restart-btn');
 const hintBtn = document.getElementById('hint-btn');
 const timerEl = document.getElementById('timer');
 const countEl = document.getElementById('count');
 const foundListEl = document.getElementById('found-list');
 const svgObject = document.getElementById('us-svg');
 
+// ====== Helpers ======
 function normalize(s){ return s.trim().toLowerCase().replace(/\s+/g,' '); }
-
-// Convert seconds to mm:ss
 function formatTime(seconds){
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
   return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
 
-// Load SVG
+// ====== Load SVG ======
 svgObject.addEventListener('load', ()=>{
   try{
     svgDoc = svgObject.contentDocument;
@@ -39,12 +40,13 @@ svgObject.addEventListener('load', ()=>{
       if(el) el.classList.add('state-default');
     });
   }catch(e){
-    console.warn('Could not access SVG document (CORS?). If so, download the SVG locally.');
+    console.warn('Could not access SVG document. Consider downloading it locally.');
   }
 });
 
+// ====== Start / Restart Game ======
 function startGame(){
-  // reset
+  // reset sets and UI
   found.clear();
   foundListEl.innerHTML = '';
   timeLeft = 600;
@@ -54,7 +56,7 @@ function startGame(){
   input.disabled = false;
   input.focus();
 
-  // reset SVG
+  // reset SVG highlighting
   if(svgDoc){
     STATES.forEach(name=>{
       const el = svgDoc.getElementById(STATE_TO_ABBR[name]);
@@ -74,8 +76,10 @@ function startGame(){
   }, 1000);
 }
 
+// ====== Update Count ======
 function updateCount(){ countEl.textContent = found.size; }
 
+// ====== Mark Found State ======
 function markFound(stateName){
   const abbr = STATE_TO_ABBR[stateName];
   if(svgDoc){
@@ -94,6 +98,7 @@ function markFound(stateName){
   }
 }
 
+// ====== End Game ======
 function endGame(won){
   input.disabled = true;
   if(timerId) clearInterval(timerId);
@@ -102,7 +107,7 @@ function endGame(won){
   }, 50);
 }
 
-// Submit state on Enter
+// ====== Input Handling ======
 input.addEventListener('keydown', e=>{
   if(e.key === 'Enter'){
     const value = input.value.trim();
@@ -116,7 +121,7 @@ input.addEventListener('keydown', e=>{
   }
 });
 
-// Reveal random state
+// ====== Reveal Random State ======
 hintBtn.addEventListener('click', ()=>{
   const remaining = STATES.filter(s=>!found.has(s));
   if(remaining.length===0) return;
@@ -125,10 +130,11 @@ hintBtn.addEventListener('click', ()=>{
   markFound(pick);
 });
 
-// Start game only on button click
+// ====== Button Events ======
 startBtn.addEventListener('click', startGame);
+restartBtn.addEventListener('click', startGame);
 
-// On page load, just show timer and 0/50
+// ====== Page Load Setup ======
 window.addEventListener('load', ()=>{
   timerEl.textContent = formatTime(timeLeft);
   countEl.textContent = found.size;

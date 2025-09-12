@@ -18,7 +18,7 @@
       </div>
       <div class="controls">
         <div class="card">
-          <div>Time left: <strong id="timer">600</strong></div>
+          <div>Time left: <strong id="timer">10:00</strong></div>
           <div>Found: <strong id="count">0</strong>/50</div>
         </div>
       </div>
@@ -26,9 +26,12 @@
 
     <section id="game" class="card">
       <div class="input-row">
-        <input id="state-input" type="text" placeholder="Type a US state (e.g. California)" autocomplete="off" autocapitalize="words">
-        <button id="start-btn">Start / Restart</button>
+        <input id="state-input" type="text" placeholder="Type a US state" autocomplete="off" autocapitalize="words">
+        
+        <button id="start-btn" class="start-game">Start Game</button>
+        <button id="restart-btn" class="secondary">Restart</button>
         <button id="hint-btn" class="secondary">Reveal random</button>
+        
         <div style="margin-left:8px; color:#6b7280">(Type full state name in English)</div>
       </div>
 
@@ -45,7 +48,7 @@
     </section>
   </div>
 
-  
+  <!-- Link to external JS -->
   <script src="script.js" defer></script>
 </body>
 </html>

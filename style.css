@@ -1,122 +1,153 @@
-
+/* ====== General Reset & Base ====== */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0;
+  padding: 20px;
   background: #f5f7fa;
   color: #333;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* ====== Header ====== */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
 }
 
 h1 {
-  text-align: center;
-  margin: 1rem 0;
-  color: #2c3e50;
+  font-size: 1.25rem;
+  margin: 0.25rem 0;
 }
 
-/* ====== Controls Section ====== */
-#controls {
-  text-align: center;
-  margin: 1rem 0;
+.info {
+  font-size: 0.95rem;
+  color: #6b7280;
 }
 
-#controls input {
-  padding: 0.6rem;
-  width: 220px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+/* ====== Controls Card ====== */
+.controls .card {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.controls .card div {
+  font-size: 0.95rem;
+}
+
+/* ====== Game Card ====== */
+#game.card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+}
+
+/* ====== Input Row ====== */
+.input-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.input-row input[type=text] {
+  padding: 10px 12px;
   font-size: 1rem;
-  margin: 0.3rem;
+  border-radius: 8px;
+  border: 1px solid #d0d7de;
+  flex: 1;
+  min-width: 180px;
 }
 
-#controls button {
-  padding: 0.6rem 1rem;
+.input-row div {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+/* ====== Buttons ====== */
+button {
+  padding: 10px 14px;
+  border-radius: 8px;
   border: none;
-  border-radius: 8px;
-  background: #3498db;
-  color: white;
-  font-size: 1rem;
   cursor: pointer;
+  font-size: 1rem;
   transition: background 0.2s ease;
 }
 
-#controls button:hover {
-  background: #2980b9;
+button.start-game {
+  background-color: #28a745;
+  color: white;
 }
 
-/* ====== Info Section ====== */
-#info {
-  text-align: center;
-  margin: 0.5rem 0 1rem 0;
-  font-size: 1.1rem;
-  color: #444;
+button.start-game:hover {
+  background-color: #218838;
 }
 
-/* ====== Layout ====== */
-#game {
+button.secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+button.secondary:hover {
+  background-color: #5a6268;
+}
+
+/* ====== Map & Found List ====== */
+#map-wrap {
   display: flex;
-  justify-content: center;
-  gap: 2rem;
-  padding: 1rem;
+  gap: 20px;
   flex-wrap: wrap;
-}
-
-/* ====== Map Section ====== */
-#map {
-  flex: 1 1 500px;
-  display: flex;
   justify-content: center;
-  align-items: center;
 }
 
-#map object {
+#map-wrap object#us-svg {
   width: 100%;
-  max-width: 700px;
+  max-width: 900px;
   height: auto;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  background: white;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-}
-
-/* ====== Found States List ====== */
-#found {
-  flex: 0 0 200px;
-  max-height: 600px;
-  overflow-y: auto;
-  background: #fff;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  padding: 1rem;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-}
-
-#found h3 {
-  margin-top: 0;
-  text-align: center;
-  color: #2c3e50;
+  border: 1px solid #e6e9ef;
+  border-radius: 8px;
 }
 
 #found-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 6px;
+  max-height: 600px;
+  overflow-y: auto;
+  flex: 0 0 200px;
 }
 
 .found-item {
-  padding: 0.3rem 0.6rem;
-  background: #ecf0f1;
+  padding: 6px 8px;
   border-radius: 6px;
+  background: #fff;
+  border: 1px solid #eef2f6;
   font-size: 0.9rem;
 }
 
-.found {
-  background: #27ae60;
-  color: white;
+.found-item.found {
+  background: #e8f6ea;
+  border-color: #d1ecd6;
 }
 
 /* ====== SVG Highlighting ====== */
 .state-default {
-  fill: #e5e7eb; /* light gray */
+  fill: #e9ecef;
   stroke: #333;
   stroke-width: 0.5;
   cursor: pointer;
@@ -128,6 +159,29 @@ h1 {
 }
 
 .found {
-  fill: #27ae60 !important;
+  fill: #28a745 !important;
   stroke: #14532d !important;
+}
+
+/* ====== Footer ====== */
+footer {
+  margin-top: 18px;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 640px) {
+  .input-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  input[type=text] {
+    width: 100%;
+  }
+
+  #found-list {
+    flex: 1 1 100%;
+  }
 }
