@@ -1,4 +1,4 @@
-// Mapping: full state name (English) -> USPS 2-letter code used as SVG IDs in the Commons file
+// Mapping: full state name -> USPS 2-letter code
 const STATE_TO_ABBR = {
   "Alabama":"AL","Alaska":"AK","Arizona":"AZ","Arkansas":"AR","California":"CA","Colorado":"CO","Connecticut":"CT","Delaware":"DE","Florida":"FL","Georgia":"GA",
   "Hawaii":"HI","Idaho":"ID","Illinois":"IL","Indiana":"IN","Iowa":"IA","Kansas":"KS","Kentucky":"KY","Louisiana":"LA","Maine":"ME","Maryland":"MD",
@@ -11,7 +11,7 @@ const STATES = Object.keys(STATE_TO_ABBR);
 let found = new Set();
 let timeLeft = 600; // 10 minutes
 let timerId = null;
-let svgDoc = null; // will hold the inline SVG document
+let svgDoc = null;
 
 const input = document.getElementById('state-input');
 const startBtn = document.getElementById('start-btn');
@@ -23,18 +23,23 @@ const svgObject = document.getElementById('us-svg');
 
 function normalize(s){ return s.trim().toLowerCase().replace(/\s+/g,' '); }
 
-// Wait until the object SVG loads, then keep reference to its document.
+// Convert seconds to mm:ss
+function formatTime(seconds){
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+// Load SVG
 svgObject.addEventListener('load', ()=>{
   try{
     svgDoc = svgObject.contentDocument;
-    // Ensure default styling for all states in the SVG: add a common class if present
     STATES.forEach(name=>{
-      const abbr = STATE_TO_ABBR[name];
-      const el = svgDoc.getElementById(abbr);
+      const el = svgDoc.getElementById(STATE_TO_ABBR[name]);
       if(el) el.classList.add('state-default');
     });
   }catch(e){
-    console.warn('Could not access SVG document (CORS?). If so, download the SVG into your repo and load it locally.');
+    console.warn('Could not access SVG document (CORS?). If so, download the SVG locally.');
   }
 });
 
@@ -42,42 +47,42 @@ function startGame(){
   // reset
   found.clear();
   foundListEl.innerHTML = '';
-  updateCount();
   timeLeft = 600;
-  timerEl.textContent = timeLeft;
+  timerEl.textContent = formatTime(timeLeft);
+  countEl.textContent = found.size;
   input.value = '';
   input.disabled = false;
   input.focus();
-  // clear fills in svg (if available)
+
+  // reset SVG
   if(svgDoc){
     STATES.forEach(name=>{
       const el = svgDoc.getElementById(STATE_TO_ABBR[name]);
       if(el) el.classList.remove('found');
     });
   }
+
+  // clear previous timer
   if(timerId) clearInterval(timerId);
   timerId = setInterval(()=>{
     timeLeft--;
-    timerEl.textContent = timeLeft;
+    timerEl.textContent = formatTime(timeLeft);
     if(timeLeft <= 0){
       clearInterval(timerId);
       endGame(false);
     }
-  },1000);
+  }, 1000);
 }
 
-function updateCount(){
-  countEl.textContent = found.size;
-}
+function updateCount(){ countEl.textContent = found.size; }
 
 function markFound(stateName){
   const abbr = STATE_TO_ABBR[stateName];
-  // Mark on SVG if possible
   if(svgDoc){
     const el = svgDoc.getElementById(abbr);
     if(el) el.classList.add('found');
   }
-  // Add to found list UI
+
   const item = document.createElement('div');
   item.className = 'found-item found';
   item.textContent = stateName;
@@ -92,34 +97,26 @@ function markFound(stateName){
 function endGame(won){
   input.disabled = true;
   if(timerId) clearInterval(timerId);
-  if(won){
-    setTimeout(()=> alert('Congratulations! You named all 50 states!'),50);
-  }else{
-    setTimeout(()=> alert(`Time's up! You found ${found.size} states.`),50);
-  }
+  setTimeout(()=>{
+    alert(won ? 'Congratulations! You named all 50 states!' : `Time's up! You found ${found.size} states.`);
+  }, 50);
 }
 
-// Listener for submitting a state (Enter key)
-input.addEventListener('keydown', (e)=>{
+// Submit state on Enter
+input.addEventListener('keydown', e=>{
   if(e.key === 'Enter'){
     const value = input.value.trim();
     if(!value) return;
-    // Try to find a matching state (case-insensitive, allow extra spaces)
     const match = STATES.find(s => normalize(s) === normalize(value));
-    if(match){
-      if(!found.has(match)){
-        found.add(match);
-        markFound(match);
-      }
-      input.value = '';
-    }else{
-      // not a valid state; give a gentle feedback
-      input.animate([{background:'#fff8f0'},{background:'#fff'}],{duration:300});
+    if(match && !found.has(match)){
+      found.add(match);
+      markFound(match);
     }
+    input.value = '';
   }
 });
 
-// Reveal a random not-yet-found state (hint)
+// Reveal random state
 hintBtn.addEventListener('click', ()=>{
   const remaining = STATES.filter(s=>!found.has(s));
   if(remaining.length===0) return;
@@ -128,10 +125,12 @@ hintBtn.addEventListener('click', ()=>{
   markFound(pick);
 });
 
+// Start game only on button click
 startBtn.addEventListener('click', startGame);
 
-// Start the game automatically on page load
+// On page load, just show timer and 0/50
 window.addEventListener('load', ()=>{
-  setTimeout(()=>{ input.focus(); },300);
-  startGame();
+  timerEl.textContent = formatTime(timeLeft);
+  countEl.textContent = found.size;
+  input.disabled = true; // disabled until Start Game
 });
