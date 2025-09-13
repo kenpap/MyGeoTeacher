@@ -15,6 +15,52 @@ body {
   max-width: 1200px;
 }
 
+/* ====== Menu ====== */
+#menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  text-align: center;
+  padding: 40px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(16,24,40,0.08);
+}
+
+#menu h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.levels {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+button.level-btn {
+  padding: 12px 20px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  transition: background 0.2s ease;
+}
+
+button.level-btn:hover {
+  background-color: #0056b3;
+}
+
+/* ====== Hide/Show ====== */
+.hidden {
+  display: none;
+}
+
 /* ====== Header ====== */
 header {
   display: flex;
@@ -115,7 +161,7 @@ button.secondary:hover {
   justify-content: center;
 }
 
-#map-wrap object#us-svg {
+#map-wrap object#map-svg {
   width: 100%;
   max-width: 900px;
   height: auto;
